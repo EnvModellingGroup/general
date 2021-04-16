@@ -1,2 +1,2 @@
 # general
-General script etc for the group
+General scripts etc for the group. 
