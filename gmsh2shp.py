@@ -7,6 +7,17 @@ import os.path
 import numpy
 import shapefile
 
+# run like:
+# gmsh2shp.py ../../projects/Tsunamis/west_coast_scot_storegga/meshes/west_scotland_regional_15m.msh
+#
+# Write a shapefile set in the current directory (i.e. where this script it probably) with the same
+# filename as the mesh file
+#
+# e.g. the above will produce:
+#west_scotland_regional_15m.shx,
+#west_scotland_regional_15m.shp,
+#west_scotland_regional_15m.dbf
+
 #####################################################################
 # Script starts here.
 optparser=OptionParser(usage='usage: %prog [options] <filename>',
@@ -89,7 +100,7 @@ for i in range(elementcount):
 def add_to_multiline(multiline, v1, v2):
    multiline.append((positions[v1-1], positions[v2-1]))
 
-shf = shapefile.Writer(shapefile.POLYLINE)
+shf = shapefile.Writer(basename,shapefile.POLYLINE)
 multiline=[]
 for triangle in triangles:
   add_to_multiline(multiline, triangle[0], triangle[1])
@@ -99,4 +110,5 @@ shf.line(multiline)
 # for some reason qgis insists on having at least one field
 shf.field('id')
 shf.record([1])
-shf.save( basename )
+#shf.save( basename )
+shf.close()
