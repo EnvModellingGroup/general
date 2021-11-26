@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 from optparse import OptionParser
 import re
@@ -39,7 +39,7 @@ if argv[0][-4:]!=".msh":
 
 basename=os.path.basename(argv[0][:-4])
 
-mshfile=file(argv[0], 'r')
+mshfile=open(argv[0], 'r')
 
 # Header section
 assert(mshfile.readline().strip()=="$MeshFormat")
@@ -65,7 +65,7 @@ for i in range(nodecount):
     line = mshfile.readline().split()
     # compare node id assigned by gmsh to consecutive node id (assumed by fluidity)
     if eval(line[0])!=i+1:
-      print line[0], i+1
+      print(line[0], i+1)
       sys.stderr.write("ERROR: Nodes in gmsh .msh file must be numbered consecutively.")
     positions.append( map(float,line[1:3]) )
 positions = numpy.array(positions)
@@ -95,7 +95,7 @@ for i in range(elementcount):
         # Ignore point elements
         pass
     else:
-        sys.stderr.write("Unknown element type "+`element[1]`+'\n')
+        sys.stderr.write("Unknown element type "+'element[1]'+'\n')
         sys.exit(1)
 def add_to_multiline(multiline, v1, v2):
    multiline.append((positions[v1-1], positions[v2-1]))
