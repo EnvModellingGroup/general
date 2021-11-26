@@ -100,7 +100,7 @@ for i in range(elementcount):
 def add_to_multiline(multiline, v1, v2):
    multiline.append((positions[v1-1], positions[v2-1]))
 
-shf = shapefile.Writer(basename,shapefile.POLYLINE)
+shf = shapefile.Writer(shapefile.POLYLINE)
 multiline=[]
 for triangle in triangles:
   add_to_multiline(multiline, triangle[0], triangle[1])
@@ -110,5 +110,4 @@ shf.line(multiline)
 # for some reason qgis insists on having at least one field
 shf.field('id')
 shf.record([1])
-#shf.save( basename )
-shf.close()
+shf.save( basename )
