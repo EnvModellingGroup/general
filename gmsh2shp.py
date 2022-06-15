@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#tide_gauge_dati!/usr/bin/env python
 
 from optparse import OptionParser
 import re
@@ -7,23 +7,12 @@ import os.path
 import numpy
 import shapefile
 
-# run like:
-# gmsh2shp.py ../../projects/Tsunamis/west_coast_scot_storegga/meshes/west_scotland_regional_15m.msh
-#
-# Write a shapefile set in the current directory (i.e. where this script it probably) with the same
-# filename as the mesh file
-#
-# e.g. the above will produce:
-#west_scotland_regional_15m.shx,
-#west_scotland_regional_15m.shp,
-#west_scotland_regional_15m.dbf
-
 #####################################################################
 # Script starts here.
 optparser=OptionParser(usage='usage: %prog [options] <filename>',
                        add_help_option=True,
                        description="""This takes a Gmsh 2.0 .msh ascii file """ + 
-                       """and produces .node, .ele and .edge or .face files.""")
+                       """and produces .shp file.""")
 
 (options, argv) = optparser.parse_args()
 
@@ -67,7 +56,7 @@ for i in range(nodecount):
     if eval(line[0])!=i+1:
       print(line[0], i+1)
       sys.stderr.write("ERROR: Nodes in gmsh .msh file must be numbered consecutively.")
-    positions.append( map(float,line[1:3]) )
+    positions.append( list(map(float,line[1:3])) )
 positions = numpy.array(positions)
 
 assert(mshfile.readline().strip()=="$EndNodes")
@@ -95,19 +84,20 @@ for i in range(elementcount):
         # Ignore point elements
         pass
     else:
-        sys.stderr.write("Unknown element type "+'element[1]'+'\n')
+        sys.stderr.write("Unknown element type "+element[1]+'\n')
         sys.exit(1)
 def add_to_multiline(multiline, v1, v2):
    multiline.append((positions[v1-1], positions[v2-1]))
 
-shf = shapefile.Writer(shapefile.POLYLINE)
+shf = shapefile.Writer(basename, shapefile.POLYLINE)
 multiline=[]
 for triangle in triangles:
-  add_to_multiline(multiline, triangle[0], triangle[1])
-  add_to_multiline(multiline, triangle[1], triangle[2])
-  add_to_multiline(multiline, triangle[2], triangle[0])
+  tri = list(triangle)
+  add_to_multiline(multiline, tri[0], tri[1])
+  add_to_multiline(multiline, tri[1], tri[2])
+  add_to_multiline(multiline, tri[2], tri[0])
+
 shf.line(multiline)
 # for some reason qgis insists on having at least one field
 shf.field('id')
 shf.record([1])
-shf.save( basename )
