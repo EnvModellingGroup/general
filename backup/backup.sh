@@ -22,7 +22,7 @@ BKDRIVE="/backup"
  
 # This is a list of files to ignore from backups.
 # Dont't forget to touch $EXCLUDES
-EXCLUDES="$BKDRIVE/excludes"
+EXCLUDES="excludes"
 
 #LOG file
 # Dont't forget to touch $LOG
@@ -74,12 +74,7 @@ mkdir -p $BKDRIVE/$TODAY/db
 # Note the NOPASSWD option in the sudo configuration. For remote
 # authentication use a password-less SSH key only allowed read permissions by
 # the backup server's root user.
-rsync -zavx
-        --rsync-path="$RSYNC" \
-        --exclude-from=$EXCLUDES \
-        --numeric-ids \
-        --delete -r \
-        --link-dest=../$YESTERDAY $SOURCE $DESTINATION
+rsync -zavx --exclude-from=$EXCLUDES --numeric-ids  --delete -r --link-dest=../$YESTERDAY $SOURCE $DESTINATION
 
 
 # Un-hash this if you want to remove old backups (older than 2 days)
