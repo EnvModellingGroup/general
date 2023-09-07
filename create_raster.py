@@ -113,7 +113,7 @@ def main():
     i = 0
     for v in vtu_files:
         if (verbose):
-            print v
+            print(v)
         # grab the number
         num = i
 
