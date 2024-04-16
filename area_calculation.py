@@ -1,7 +1,7 @@
 import qgis.core as qgis
 from qgis.analysis import QgsRasterCalculator, QgsRasterCalculatorEntry
-import gdal
-import ogr
+from osgeo import gdal
+from osgeo import ogr
 from PyQt5.QtCore import *
 import os
 import argparse
